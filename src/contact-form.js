@@ -8,6 +8,8 @@
  * - On failure the form stays put (nobody wants to retype a wedding date)
  *   and an inline, screen-reader-announced error appears instead.
  */
+import { initFormStartTracking, trackLeadSubmit } from './analytics-events.js';
+
 const SUBMIT_TIMEOUT_MS = 15000;
 
 export function initContactForm() {
@@ -19,6 +21,8 @@ export function initContactForm() {
   const submitButton = document.getElementById('contact-submit');
 
   if (!form || !success || !errorPanel || !resetButton || !submitButton) return;
+
+  initFormStartTracking(form);
 
   const submitLabel = submitButton.querySelector('.btn__label');
   const idleLabel = submitLabel ? submitLabel.textContent : '';
@@ -87,6 +91,7 @@ export function initContactForm() {
       }
 
       showSuccess();
+      trackLeadSubmit();
     } catch (err) {
       const timedOut = err instanceof DOMException && err.name === 'AbortError';
       console.error('[contact-form] submit failed:', err);

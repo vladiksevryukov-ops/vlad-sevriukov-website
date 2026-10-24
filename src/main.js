@@ -22,6 +22,7 @@ import { initPortfolioHoverPreviews } from './portfolio-hover-preview.js';
 import { initGalleryLightbox } from './gallery-lightbox.js';
 import { initClipModal } from './clip-modal.js';
 import { initCookieBanner } from './cookie-banner.js';
+import { initContactClickTracking } from './analytics-events.js';
 import './ukraine-map.js';
 
 initNav();
@@ -30,6 +31,7 @@ initHeroVideo();
 initPortfolioHoverPreviews();
 initClipModal();
 initCookieBanner();
+initContactClickTracking();
 
 // Portfolio photos: prev/next + a running counter.
 const photoTriggers = [...document.querySelectorAll('[data-lightbox-photo]')];

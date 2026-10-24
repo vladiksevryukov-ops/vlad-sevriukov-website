@@ -20,6 +20,8 @@ import './styles/components.css';
 
 import { initNav } from './nav.js';
 import { initCookieBanner } from './cookie-banner.js';
+import { initContactClickTracking } from './analytics-events.js';
 
 initNav();
 initCookieBanner();
+initContactClickTracking();
