@@ -5,12 +5,15 @@
  * ever open at a time), no "view on Instagram" link. Distinct from
  * gallery-lightbox.js because there's nothing to page between here.
  */
+import { createVideoProgressTracker } from './analytics-events.js';
+
 export function initClipModal() {
   const modal = document.getElementById('clip-modal');
   const video = document.getElementById('clip-modal-video');
   const triggers = document.querySelectorAll('[data-clip-src]');
   if (!modal || !video || !triggers.length) return;
 
+  const trackPlay = createVideoProgressTracker(video);
   let lastTrigger = null;
 
   function open(trigger) {
@@ -22,6 +25,10 @@ export function initClipModal() {
       // Blocked autoplay just leaves it paused on the first frame — the
       // visible <video controls> lets the visitor start it manually.
     });
+    // aria-label is already a human-readable "Відтворити відео: Київ" —
+    // strip the fixed prefix rather than inventing a parallel name per clip.
+    const label = trigger.getAttribute('aria-label') || 'clip';
+    trackPlay(label.replace(/^Відтворити відео:?\s*/i, '') || label);
     modal.querySelector('.lightbox__close')?.focus();
   }
 

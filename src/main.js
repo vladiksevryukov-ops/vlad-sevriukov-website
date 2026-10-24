@@ -22,7 +22,13 @@ import { initPortfolioHoverPreviews } from './portfolio-hover-preview.js';
 import { initGalleryLightbox } from './gallery-lightbox.js';
 import { initClipModal } from './clip-modal.js';
 import { initCookieBanner } from './cookie-banner.js';
-import { initContactClickTracking } from './analytics-events.js';
+import {
+  initContactClickTracking,
+  initFaqTracking,
+  initSectionViewTracking,
+  trackPortfolioPhotoView,
+  trackReviewView,
+} from './analytics-events.js';
 import './ukraine-map.js';
 
 initNav();
@@ -32,6 +38,8 @@ initPortfolioHoverPreviews();
 initClipModal();
 initCookieBanner();
 initContactClickTracking();
+initFaqTracking();
+initSectionViewTracking(['about', 'liga', 'portfolio', 'process', 'reviews', 'faq', 'contact']);
 
 // Portfolio photos: prev/next + a running counter.
 const photoTriggers = [...document.querySelectorAll('[data-lightbox-photo]')];
@@ -47,7 +55,10 @@ const photoLightbox = initGalleryLightbox({
   },
 });
 photoTriggers.forEach((trigger, i) => {
-  trigger.addEventListener('click', () => photoLightbox?.open(i, trigger));
+  trigger.addEventListener('click', () => {
+    photoLightbox?.open(i, trigger);
+    trackPortfolioPhotoView(i + 1);
+  });
 });
 
 // Reviews: prev/next + a name + role caption instead of a counter.
@@ -66,5 +77,8 @@ const reviewLightbox = initGalleryLightbox({
   },
 });
 reviewTriggers.forEach((trigger, i) => {
-  trigger.addEventListener('click', () => reviewLightbox?.open(i, trigger));
+  trigger.addEventListener('click', () => {
+    reviewLightbox?.open(i, trigger);
+    trackReviewView(reviewItems[i].name);
+  });
 });

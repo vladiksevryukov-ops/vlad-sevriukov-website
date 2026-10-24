@@ -15,6 +15,8 @@
  * that read as "expands to the middle of the screen" rather than just
  * growing off the bottom of the viewport.
  */
+import { createVideoProgressTracker } from './analytics-events.js';
+
 export function initHeroVideo() {
   const wrap = document.querySelector('.hero-video');
   const video = document.querySelector('.hero-video__player');
@@ -22,6 +24,10 @@ export function initHeroVideo() {
   const hint = document.querySelector('.hero-video__hint');
   const glyph = document.querySelector('.hero-video__glyph');
   if (!wrap || !video || !backdrop || !hint || !glyph) return;
+
+  // Only the deliberate sound-on expand counts as "watching" — the muted
+  // autoplay loop on page load isn't a user action worth tracking.
+  const trackPlay = createVideoProgressTracker(video);
 
   const MOBILE_QUERY = '(max-width: 780px)';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -61,6 +67,7 @@ export function initHeroVideo() {
       video.src = '/media/hero-full.mp4';
     }
     video.play().catch(() => {});
+    trackPlay('hero');
     paintExpanded();
 
     // On mobile the box just grew taller in place (see the class doc
